@@ -21,7 +21,17 @@
         "Very inspiring project! 🚀",
         "Stunning visuals! 🎨",
         "Beautifully crafted! 🛠️",
-        "Impressive creativity! 💡"
+        "Impressive creativity! 💡",
+        "Fantastic composition! 🖼️",
+        "Absolutely love this! ❤️",
+        "Exceptional quality! 🏆",
+        "Creative genius at work! 🧠",
+        "The colors are amazing! 🌈",
+        "Brilliant storytelling! 📖",
+        "This stands out! ✨",
+        "Remarkable craftsmanship! 🛠️",
+        "Such a unique perspective! 👁️",
+        "The texture is perfect! 🌊"
     ];
 
     let clickedProjects = new Set();
