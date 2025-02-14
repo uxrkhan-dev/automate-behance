@@ -1,13 +1,31 @@
 (async function automateBehance() {
     let projectsAppreciated = 0;
-    const maxProjects = 1000; // Limit the number of projects to process
-    const projectGridSelector = '.ProjectCoverNeue-coverLink-U39'; // Selector for project covers
+    let commentsPosted = 0;
+    const maxProjects = 250;
+    const projectGridSelector = '.ProjectCoverNeue-coverLink-U39';
     const appreciatedSelector = '.Appreciate-wrapper-REw.Project-appreciateTopSidebarIcon-_E7';
     const followButtonSelector = '.FollowButtonMinimal-button-jX1.rf-button--follow';
     const closeButtonSelector = '.Btn-button-CqT.Btn-inverted-GDL.Btn-normal-If5.Btn-shouldBlur-ZHs.UniversalPopup-closeModule-RuD';
-    let clickedProjects = new Set(); // Track already clicked projects
+    const commentInputSelector = '.TextArea-input-GZ6.ProjectCommentInput-commentTextArea-Vcg.TextArea-textarea';
+    const commentButtonSelector = '.Btn-labelWrapper-_Re';
+    const modalSelector = '.PersonalizedContentFeedModal-modal-hqT';
+    const commentContainerSelector = '.ProjectComments-projectCommentContainer-pzz';
 
-    // Create a floating popup for displaying counts
+    const comments = [
+        "Awesome work! 😍",
+        "I love the design! 🔥",
+        "Brilliant concept! 👏",
+        "Incredible attention to detail! 🎯",
+        "Such creative execution! 🌟",
+        "Top-notch design! 💯",
+        "Very inspiring project! 🚀",
+        "Stunning visuals! 🎨",
+        "Beautifully crafted! 🛠️",
+        "Impressive creativity! 💡"
+    ];
+
+    let clickedProjects = new Set();
+
     const popup = document.createElement('div');
     popup.style.position = 'fixed';
     popup.style.top = '20px';
@@ -18,23 +36,23 @@
     popup.style.borderRadius = '5px';
     popup.style.fontSize = '14px';
     popup.style.zIndex = '10000';
-    popup.style.display = 'none'; // Initially hidden
+    popup.style.display = 'block';
     popup.innerHTML = `
         <h4>Automation Progress:</h4>
         <p id="appreciatedCount">Appreciated: 0</p>
+        <p id="commentCount">Comments: 0</p>
     `;
     document.body.appendChild(popup);
 
     function updatePopup() {
         document.getElementById('appreciatedCount').innerText = `Appreciated: ${projectsAppreciated}`;
+        document.getElementById('commentCount').innerText = `Comments: ${commentsPosted}`;
     }
 
-    // Function to wait for a specific period
     async function waitFor(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Function to click an element and wait for a delay
     async function clickElement(selector, description, delay = 1000) {
         let element = document.querySelector(selector);
         if (element) {
@@ -46,50 +64,72 @@
         return false;
     }
 
-    // Function to process all projects
+    async function scrollToElement(selector) {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            await waitFor(2000);
+            console.log(`✅ Scrolled to: ${selector}`);
+        }
+    }
+
     async function processProjects() {
-        // Select all project covers but only pick the ones that have not been clicked yet
         let projectCovers = Array.from(document.querySelectorAll(projectGridSelector))
-            .filter(project => !clickedProjects.has(project))  // Only process unclicked projects
-            .slice(0, maxProjects); // Limit to the max number of projects
+            .filter(project => !clickedProjects.has(project))
+            .slice(0, maxProjects);
 
         for (let project of projectCovers) {
-            clickedProjects.add(project); // Mark the project as clicked
-            project.click();  // Open the project
+            clickedProjects.add(project);
+            project.click();
             console.log("✅ Opened project cover...");
-            await waitFor(3000);  // Wait for the project popup to load
+            await waitFor(3000);
 
-            // Click "Appreciate" button (like button) if not already appreciated
+            // Appreciate project
             let appreciateButton = document.querySelector(appreciatedSelector);
             if (appreciateButton && !appreciateButton.classList.contains('Appreciate-wrapper-REw--active')) {
-                let appreciated = await clickElement(appreciatedSelector, 'Appreciate button', 2000);
-                if (appreciated) projectsAppreciated++;
-                updatePopup(); // Update the popup
+                if (await clickElement(appreciatedSelector, 'Appreciate button', 2000)) {
+                    projectsAppreciated++;
+                    updatePopup();
+                }
             } else {
-                console.log("✅ Already appreciated this project, skipping...");
+                console.log("✅ Already appreciated, skipping...");
             }
 
-            // Click "Follow" button if not already followed
-            let followButton = document.querySelector(followButtonSelector);
-            let alreadyFollowed = document.querySelector('.Tooltip-wrapper-Uzv.Tooltip-responsive-XDl.FollowButtonMinimal-followBtn-ylc.Avatar-follow-Arf');
-            if (followButton && !alreadyFollowed) {
-                await clickElement(followButtonSelector, 'Follow button', 2000);
+            // Scroll to comment area
+            await scrollToElement(commentContainerSelector);
+
+            // Post comment
+            document.querySelector(modalSelector)?.remove();
+            await waitFor(1000);
+            let commentInput = document.querySelector(commentInputSelector);
+            if (commentInput) {
+                let randomComment = comments[Math.floor(Math.random() * comments.length)];
+                commentInput.value = randomComment;
+                commentInput.dispatchEvent(new Event('input', { bubbles: true }));
+                await waitFor(2000);
+                let commentButton = Array.from(document.querySelectorAll(commentButtonSelector)).find(btn => btn.innerText.includes('Post a Comment'));
+                if (commentButton) {
+                    commentButton.click();
+                    await waitFor(3000); // Increased wait time to account for loading animation
+                    commentsPosted++;
+                    updatePopup();
+                } else {
+                    console.log("❌ Comment button not found");
+                }
             } else {
-                console.log("✅ Already followed, skipping...");
+                console.log("❌ Comment input not found");
             }
 
-            // Close the project popup after interacting with it
+            // Close project
             await clickElement(closeButtonSelector, 'Close button', 2000);
-
             console.log("✅ Completed project actions, moving to next...");
         }
 
         console.log(`🎉 Total projects appreciated: ${projectsAppreciated}`);
+        console.log(`💬 Total comments posted: ${commentsPosted}`);
     }
 
-    // Show the popup and start the process
-    popup.style.display = 'block'; // Show the popup
     console.log("🚀 Script started...");
-    await processProjects();  // Process all projects
+    await processProjects();
     console.log("✅ Script completed!");
 })();
