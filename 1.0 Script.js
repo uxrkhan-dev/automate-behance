@@ -114,13 +114,18 @@
             let commentInput = document.querySelector(commentInputSelector);
             if (commentInput) {
                 let randomComment = comments[Math.floor(Math.random() * comments.length)];
-                commentInput.value = randomComment;
-                commentInput.dispatchEvent(new Event('input', { bubbles: true }));
-                await waitFor(2000);
+                let i = 0;
+                while (i < randomComment.length) {
+                    commentInput.value += randomComment.charAt(i);
+                    commentInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    await waitFor(Math.floor(Math.random() * 200) + 100);
+                    i++;
+                }
+                await waitFor(3000);
                 let commentButton = Array.from(document.querySelectorAll(commentButtonSelector)).find(btn => btn.innerText.includes('Post a Comment'));
                 if (commentButton) {
                     commentButton.click();
-                    await waitFor(3000); // Increased wait time to account for loading animation
+                    await waitFor(5000);
                     commentsPosted++;
                     updatePopup();
                 } else {
@@ -131,8 +136,13 @@
             }
 
             // Close project
-            await clickElement(closeButtonSelector, 'Close button', 2000);
+            await clickElement(closeButtonSelector, 'Close button', 3000);
             console.log("✅ Completed project actions, moving to next...");
+
+            // Random delay to mimic human behavior
+            const randomDelay = Math.floor(Math.random() * 7000) + 3000;
+            console.log(`⏳ Waiting for ${randomDelay / 1000} seconds before the next project...`);
+            await waitFor(randomDelay);
         }
 
         console.log(`🎉 Total projects appreciated: ${projectsAppreciated}`);
