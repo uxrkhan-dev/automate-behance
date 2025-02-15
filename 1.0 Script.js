@@ -108,7 +108,7 @@
         const element = document.querySelector(selector);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            await waitFor(2000);
+            await waitFor(1000); // Adjusted scroll wait time
             console.log(`✅ Scrolled to: ${selector}`);
         }
     }
@@ -122,12 +122,12 @@
             clickedProjects.add(project);
             project.click();
             console.log("✅ Opened project cover...");
-            await waitFor(3000);
+            await waitFor(2000); // Adjusted initial delay after opening project
 
             // Appreciate project
             let appreciateButton = document.querySelector(appreciatedSelector);
             if (appreciateButton && !appreciateButton.classList.contains('Appreciate-wrapper-REw--active')) {
-                if (await clickElement(appreciatedSelector, 'Appreciate button', 2000)) {
+                if (await clickElement(appreciatedSelector, 'Appreciate button', 1500)) {
                     projectsAppreciated++;
                     updatePopup();
                 }
@@ -136,11 +136,11 @@
             }
 
             // Scroll to comment area
-            await scrollToElement(commentContainerSelector);
+            await scrollToElement(commentInputSelector); // Scrolls to input area now
 
             // Post comment
             document.querySelector(modalSelector)?.remove();
-            await waitFor(1000);
+            await waitFor(800); // Adjusted delay before typing comment
             let commentInput = document.querySelector(commentInputSelector);
             if (commentInput) {
                 let randomComment = comments[Math.floor(Math.random() * comments.length)];
@@ -148,14 +148,14 @@
                 while (i < randomComment.length) {
                     commentInput.value += randomComment.charAt(i);
                     commentInput.dispatchEvent(new Event('input', { bubbles: true }));
-                    await waitFor(Math.floor(Math.random() * 200) + 100);
+                    await waitFor(Math.floor(Math.random() * 150) + 50); // Faster typing delay
                     i++;
                 }
-                await waitFor(3000);
+                await waitFor(2000); // Adjusted wait after typing
                 let commentButton = Array.from(document.querySelectorAll(commentButtonSelector)).find(btn => btn.innerText.includes('Post a Comment'));
                 if (commentButton) {
                     commentButton.click();
-                    await waitFor(5000);
+                    await waitFor(2000); // Shortened wait after posting
                     commentsPosted++;
                     updatePopup();
                 } else {
@@ -166,11 +166,11 @@
             }
 
             // Close project
-            await clickElement(closeButtonSelector, 'Close button', 3000);
+            await clickElement(closeButtonSelector, 'Close button', 1500); // Shortened close delay
             console.log("✅ Completed project actions, moving to next...");
 
-            // Random delay to mimic human behavior
-            const randomDelay = Math.floor(Math.random() * 7000) + 3000;
+            // Random delay capped at 3.5 seconds
+            const randomDelay = Math.floor(Math.random() * 2000) + 1500; // Random between 1.5s and 3.5s
             console.log(`⏳ Waiting for ${randomDelay / 1000} seconds before the next project...`);
             await waitFor(randomDelay);
         }
