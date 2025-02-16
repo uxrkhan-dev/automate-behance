@@ -170,8 +170,8 @@
             console.log("✅ Completed project actions, moving to next...");
 
             // Random delay capped at 3.5 seconds
-            const randomDelay = Math.floor(Math.random() * 2000) + 1500; // Random between 1.5s and 3.5s
-            console.log(`⏳ Waiting for ${randomDelay / 1000} seconds before the next project...`);
+            const randomDelay = Math.floor(Math.random() * 7000) + 3000; // Random delay between 3-10 seconds
+            console.log(`⏳ Waiting for ${randomDelay / 1000} seconds...`);
             await waitFor(randomDelay);
         }
 
