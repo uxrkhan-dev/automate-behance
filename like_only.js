@@ -1,6 +1,6 @@
 (async function automateBehance() {
     let projectsAppreciated = 0;
-    const maxProjects = 250;
+    const maxProjects = 500;
     const projectGridSelector = '.ProjectCoverNeue-coverLink-U39';
     const appreciatedSelector = '.Appreciate-wrapper-REw.Project-appreciateTopSidebarIcon-_E7';
     const closeButtonSelector = '.Btn-button-CqT.Btn-inverted-GDL.Btn-normal-If5.Btn-shouldBlur-ZHs.UniversalPopup-closeModule-RuD';
@@ -35,6 +35,8 @@
     async function clickElement(selector, description, delay = 1000) {
         let element = document.querySelector(selector);
         if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            await waitFor(1000);
             element.click();
             console.log(`✅ Clicked: ${description}`);
             await waitFor(delay);
@@ -43,13 +45,26 @@
         return false;
     }
 
+    async function humanLikeScroll() {
+        for (let i = 0; i < 5; i++) {
+            window.scrollBy(0, window.innerHeight / 2);
+            await waitFor(1500);
+            window.scrollBy(0, -window.innerHeight / 3);
+            await waitFor(1500);
+        }
+    }
+
     async function processProjects() {
+        await humanLikeScroll();
+
         let projectCovers = Array.from(document.querySelectorAll(projectGridSelector))
             .filter(project => !clickedProjects.has(project))
             .slice(0, maxProjects);
 
         for (let project of projectCovers) {
             clickedProjects.add(project);
+            project.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            await waitFor(1000);
             project.click();
             console.log("✅ Opened project cover...");
             await waitFor(2000);
