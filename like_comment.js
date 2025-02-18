@@ -61,7 +61,7 @@
         "Amazing Work",
         "Great work",
         "👏👏 COOL CONCEPT 👏👏",
-        "Wow! Congrats @Jarosław Dziubek ... nice project!",
+        "Wow! Congrats... nice project!",
         "👏👏",
         "Amazing project",
         "👍🏻",
