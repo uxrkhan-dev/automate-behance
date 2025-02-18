@@ -11,82 +11,39 @@
     const modalSelector = '.PersonalizedContentFeedModal-modal-hqT';
     const commentContainerSelector = '.ProjectComments-projectCommentContainer-pzz';
 
-    const comments = [
-    "Phenomenal design",
-    "Outstanding creativity",
-    "Mind-blowing visuals",
-    "Superb execution",
-    "Simply stunning",
-    "Amazing concept",
-    "Masterful work",
-    "Unreal talent",
-    "Perfect blend of colors",
-    "Visual masterpiece",
-    "Absolutely breathtaking",
-    "Such brilliant detail",
-    "Wow, so inspiring",
-    "Unique and refreshing",
-    "Impeccable craftsmanship",
-    "Next-level creativity",
-    "Fabulous design",
-    "Bold and beautiful",
-    "Innovative and fresh",
-    "Super inspiring",
-    "Elegantly designed",
-    "Totally captivating",
-    "Flawless execution",
-    "Vibrant and dynamic",
-    "A true work of art",
-    "Creative brilliance",
-    "Excellent attention to detail",
-    "Top-tier design",
-    "Visually enchanting",
-    "Perfection in every pixel",
-    "Such a clever concept",
-    "Amazing textures",
-    "Full of life and energy",
-    "Mesmerizing design",
-    "Refined and elegant",
-    "Spectacular visuals",
-    "Sharp and clean",
-    "Such powerful creativity",
-    "Dynamic and bold",
-    "Art at its finest",
-    "Superb aesthetic",
-    "Beautifully executed",
-    "Mindfully crafted",
-    "Astounding work",
-    "A true inspiration",
-    "Refreshing and modern",
-    "Unforgettable design",
-    "Seamless execution",
-    "Simply brilliant",
-    "Visual perfection",
-    "greaaat!",
-    "wonderful style, really good work",
-    "Amazing!!!",
-    "Fantastic work, congrats.",
-    "Inspiring!",
-    "You nail it every time! Your work is so consistent",
-    "gorgeous!",
-    "Perfect!!!",
-    "Wow🔥🔥",
-    "great work!",
-    "Looks so nice",
-    "awesome design",
-    "Incredible work! The composition and details are truly outstanding.",
-    "your animations make a strong impression, looks creative!",
-    "looks so great",
-    "LOVVVVE this!",
-    "It looks dynamic and stand out",
-    "Excellent work 👏🏻👏🏻",
-    "Amazing work!",
-    "Amazing!",
-    "Amazing work!",
-    "The details and quality are outstanding",
-    "Great project!",
-    "everything is so stylish",
+    let comments = [
+        "Phenomenal design", "Outstanding creativity", "Mind-blowing visuals", 
+        "Superb execution", "Simply stunning", "Amazing concept", "Masterful work", 
+        "Unreal talent", "Perfect blend of colors", "Visual masterpiece", 
+        "Absolutely breathtaking", "Such brilliant detail", "Wow, so inspiring", 
+        "Unique and refreshing", "Impeccable craftsmanship", "Next-level creativity", 
+        "Fabulous design", "Bold and beautiful", "Innovative and fresh", "Super inspiring", 
+        "Elegantly designed", "Totally captivating", "Flawless execution", "Vibrant and dynamic", 
+        "A true work of art", "Creative brilliance", "Excellent attention to detail", 
+        "Top-tier design", "Visually enchanting", "Perfection in every pixel", 
+        "Such a clever concept", "Amazing textures", "Full of life and energy", 
+        "Mesmerizing design", "Refined and elegant", "Spectacular visuals", "Sharp and clean", 
+        "Such powerful creativity", "Dynamic and bold", "Art at its finest", "Superb aesthetic", 
+        "Beautifully executed", "Mindfully crafted", "Astounding work", "A true inspiration", 
+        "Refreshing and modern", "Unforgettable design", "Seamless execution", 
+        "Simply brilliant", "Visual perfection", "greaaat!", "wonderful style, really good work", 
+        "Amazing!!!", "Fantastic work, congrats.", "Inspiring!", 
+        "You nail it every time! Your work is so consistent", "gorgeous!", "Perfect!!!", 
+        "Wow🔥🔥", "great work!", "Looks so nice", "awesome design", 
+        "Incredible work! The composition and details are truly outstanding.", 
+        "your animations make a strong impression, looks creative!", "looks so great", 
+        "LOVVVVE this!", "It looks dynamic and stand out", "Excellent work 👏🏻👏🏻", 
+        "Amazing work!", "Amazing!", "Amazing work!", "The details and quality are outstanding", 
+        "Great project!", "everything is so stylish"
     ];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
     let clickedProjects = new Set();
 
@@ -167,6 +124,7 @@
             await waitFor(800); // Adjusted delay before typing comment
             let commentInput = document.querySelector(commentInputSelector);
             if (commentInput) {
+                comments = shuffle(comments); // Shuffle comments before selecting
                 let randomComment = comments[Math.floor(Math.random() * comments.length)];
                 let i = 0;
                 while (i < randomComment.length) {
